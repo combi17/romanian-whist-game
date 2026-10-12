@@ -1,0 +1,213 @@
+/* The room before the deal. Shares the table's felt, plates and seat geometry. */
+
+.room-code {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.room-code__value {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  padding: 0.25rem 0.7rem 0.3rem;
+  border-radius: 0.55rem;
+  border: 1px solid rgba(240, 200, 97, 0.35);
+  background: rgba(240, 200, 97, 0.08);
+  cursor: pointer;
+  font-family: var(--font-ui);
+  transition: background-color 150ms ease, border-color 150ms ease;
+}
+.room-code__value:hover {
+  background: rgba(240, 200, 97, 0.16);
+  border-color: var(--gold);
+}
+.room-code__value:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+}
+
+/* The code is what you read aloud or paste to a friend, so it gets to be big. */
+.room-code__digits {
+  font-family: var(--font-display);
+  font-size: 1.7rem;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0.12em;
+  color: var(--gold);
+  font-variant-numeric: tabular-nums;
+}
+
+.room-code__copy {
+  font-size: 0.62rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+
+/* ------------------------------------------------------------------- table */
+
+.empty-chair {
+  padding: 0.55rem 1.1rem;
+  border-radius: 999px;
+  border: 1px dashed rgba(255, 255, 255, 0.18);
+  background: rgba(0, 0, 0, 0.28);
+  color: var(--text-faint);
+  font-size: 0.78rem;
+  font-style: italic;
+  white-space: nowrap;
+}
+
+.lobby-centre {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  pointer-events: none;
+}
+.lobby-centre__count {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 3.4rem;
+  font-weight: 600;
+  line-height: 1;
+  color: rgba(240, 200, 97, 0.85);
+  text-shadow: 0 0.2rem 1.5rem rgba(0, 0, 0, 0.6);
+}
+.lobby-centre__label {
+  display: block;
+  margin-top: 0.3rem;
+  font-size: 0.72rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+/* ---------------------------------------------------------------- controls */
+
+.lobby-controls {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  padding-top: 1.2rem;
+  max-width: min(100%, 46rem);
+}
+
+.lobby-controls .toggle {
+  width: auto;
+  max-width: 22rem;
+}
+
+/* --------------------------------------------------------------- bot seats */
+
+.bot-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  align-items: center;
+}
+
+.bot-controls__label {
+  font-size: 0.6rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+
+.bot-controls__buttons {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.bot-controls__count {
+  min-width: 1.2rem;
+  text-align: center;
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+
+.bot-btn {
+  width: 2.1rem;
+  height: 2.1rem;
+  border-radius: 0.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text);
+  font-family: var(--font-ui);
+  font-size: 1.2rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: background-color 150ms ease, border-color 150ms ease;
+}
+.bot-btn:hover:not(:disabled) {
+  background: rgba(240, 200, 97, 0.16);
+  border-color: var(--gold);
+}
+.bot-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+.bot-btn:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+}
+
+.lobby-start {
+  padding: 0.85rem 2.2rem;
+  font-size: 1rem;
+}
+.lobby-start:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.lobby-wait {
+  color: var(--text-dim);
+  font-size: 0.9rem;
+  font-style: italic;
+  margin: 0;
+}
+
+.lobby-error {
+  width: 100%;
+  text-align: center;
+  color: #ffc9c5;
+  background: rgba(60, 22, 20, 0.9);
+  border: 1px solid var(--danger-dim);
+  border-radius: 0.55rem;
+  padding: 0.55rem 0.9rem;
+  font-size: 0.84rem;
+  margin: 0;
+}
+
+@media (max-width: 900px) {
+  .lobby-controls {
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+  .room-code__digits {
+    font-size: 1.35rem;
+  }
+}
+
+/* Short viewport: the lobby felt and its controls have to share very little. */
+@media (max-height: 560px) {
+  .lobby-centre__count { font-size: 2rem; }
+  .lobby-centre__label { font-size: 0.6rem; }
+  .lobby-controls { padding-top: 0.5rem; gap: 0.7rem; }
+  .lobby-controls .toggle { padding: 0.45rem 0.6rem; max-width: 16rem; }
+  .toggle__desc { display: none; }
+  .lobby-start { padding: 0.55rem 1.4rem; font-size: 0.9rem; }
+  .room-code__digits { font-size: 1.2rem; }
+  .empty-chair { padding: 0.3rem 0.7rem; font-size: 0.68rem; }
+  .bot-controls__label { font-size: 0.52rem; }
+  .bot-btn { width: 1.7rem; height: 1.7rem; font-size: 1rem; }
+}

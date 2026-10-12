@@ -1,0 +1,375 @@
+/* ==========================================================================
+   Landing page
+   ========================================================================== */
+
+.home {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  grid-template-rows: 1fr auto;
+  place-items: center;
+  overflow: auto;
+  background: var(--bg-deep);
+  color: var(--text);
+  font-family: var(--font-ui);
+  text-align: center;
+
+  /* The felt is 120vw wide, so only allow vertical scrolling. */
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior-y: contain;
+
+  padding:
+    calc(2rem + var(--safe-t))
+    calc(1.25rem + var(--safe-r))
+    calc(1.25rem + var(--safe-b))
+    calc(1.25rem + var(--safe-l));
+}
+
+/* the table, glimpsed from above and out of focus */
+.home__felt {
+  position: absolute;
+  left: 50%;
+  top: 42%;
+  transform: translate(-50%, -50%);
+  width: min(120vw, 74rem);
+  height: min(80vh, 44rem);
+  border-radius: 50%;
+  background: radial-gradient(
+    ellipse 58% 66% at 50% 38%,
+    var(--felt-core) 0%,
+    var(--felt-mid) 45%,
+    var(--felt-edge) 100%
+  );
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.home__vignette {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 60% 50% at 50% 40%, transparent 0%, rgba(6, 12, 10, 0.72) 78%),
+    linear-gradient(180deg, rgba(6, 12, 10, 0.5), transparent 30%, rgba(6, 12, 10, 0.7));
+}
+
+.home__inner {
+  position: relative;
+  z-index: 1;
+  max-width: 34rem;
+}
+
+.home__eyebrow {
+  margin: 0 0 0.9rem;
+  font-size: 0.68rem;
+  letter-spacing: 0.34em;
+  text-transform: uppercase;
+  color: rgba(240, 200, 97, 0.75);
+}
+
+/* The one piece of real display type in the product. */
+.home__title {
+  margin: 0 0 1.1rem;
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 11vw, 6.5rem);
+  font-weight: 600;
+  line-height: 0.92;
+  letter-spacing: -0.015em;
+  color: var(--gold);
+  text-shadow: 0 0.4rem 2.5rem rgba(0, 0, 0, 0.6);
+}
+
+.home__lede {
+  margin: 0 auto 2.4rem;
+  max-width: 27rem;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #cbd8d2;
+}
+
+.home__actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.home__play {
+  padding: 1rem 3.4rem;
+  border: none;
+  border-radius: 999px;
+  background: var(--gold);
+  color: #241d08;
+  font-family: var(--font-ui);
+  font-size: 1.1rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  cursor: pointer;
+  transition: transform 160ms ease, background-color 160ms ease;
+}
+.home__play:hover:not(:disabled) {
+  background: #ffd97a;
+  transform: translateY(-2px);
+}
+.home__play:disabled {
+  opacity: 0.55;
+  cursor: progress;
+}
+.home__play:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 3px;
+}
+
+.home__rules {
+  padding: 1rem 2rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: var(--text);
+  text-decoration: none;
+  font-size: 1rem;
+  transition: border-color 160ms ease, background-color 160ms ease;
+}
+.home__rules:hover {
+  border-color: rgba(240, 200, 97, 0.55);
+  background: rgba(240, 200, 97, 0.08);
+}
+
+.home__signed-in {
+  margin: 1.6rem 0 0;
+  font-size: 0.85rem;
+  color: var(--text-faint);
+}
+.home__signed-in strong {
+  color: var(--text-dim);
+  font-weight: 500;
+}
+
+.home__footer {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  gap: 0.8rem;
+  align-items: center;
+  font-size: 0.8rem;
+  color: var(--text-faint);
+}
+.home__footer a {
+  color: var(--text-faint);
+  text-decoration: none;
+}
+.home__footer a:hover {
+  color: var(--gold);
+}
+
+/* ------------------------------------------------------------ sign-in panel */
+
+.signin {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  display: grid;
+  place-items: center;
+  padding:
+    calc(1.25rem + var(--safe-t))
+    calc(1.25rem + var(--safe-r))
+    calc(1.25rem + var(--safe-b))
+    calc(1.25rem + var(--safe-l));
+  overflow-y: auto;
+  animation: home-fade 180ms ease;
+}
+
+.signin__scrim {
+  position: absolute;
+  inset: 0;
+  border: none;
+  padding: 0;
+  background: rgba(4, 9, 8, 0.78);
+  cursor: pointer;
+}
+
+.signin__panel {
+  position: relative;
+  width: min(100%, 25rem);
+  padding: 2.2rem 2rem 1.6rem;
+  border-radius: 1.2rem;
+  background: linear-gradient(170deg, #1a2a24, #0d1714);
+  border: 1px solid rgba(240, 200, 97, 0.28);
+  box-shadow: 0 2rem 5rem rgba(0, 0, 0, 0.65);
+  animation: home-rise 240ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.signin__eyebrow {
+  display: block;
+  font-size: 0.62rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  margin-bottom: 0.5rem;
+}
+
+.signin__title {
+  margin: 0 0 0.6rem;
+  font-family: var(--font-display);
+  font-size: 1.75rem;
+  font-weight: 600;
+  color: var(--gold);
+}
+
+.signin__body {
+  margin: 0 0 1.6rem;
+  font-size: 0.88rem;
+  line-height: 1.5;
+  color: var(--text-dim);
+}
+
+.signin__options {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.9rem;
+}
+
+.signin__divider {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  width: 100%;
+  color: var(--text-faint);
+  font-size: 0.72rem;
+}
+.signin__divider::before,
+.signin__divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.signin__email {
+  display: block;
+  width: 100%;
+  max-width: 17.5rem;
+  padding: 0.75rem 1rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: var(--text);
+  text-decoration: none;
+  font-size: 0.92rem;
+  transition: border-color 150ms ease, background-color 150ms ease;
+}
+.signin__email:hover {
+  border-color: rgba(240, 200, 97, 0.5);
+  background: rgba(240, 200, 97, 0.08);
+}
+
+.signin__error {
+  margin: 1rem 0 0;
+  padding: 0.55rem 0.8rem;
+  border-radius: 0.5rem;
+  background: rgba(60, 22, 20, 0.9);
+  border: 1px solid var(--danger-dim);
+  color: #ffc9c5;
+  font-size: 0.82rem;
+}
+
+.signin__terms {
+  margin: 1.6rem 0 0;
+  font-size: 0.7rem;
+  color: var(--text-faint);
+}
+.signin__terms a {
+  color: var(--gold-dim);
+}
+
+/* ------------------------------------------------------------------- toast */
+
+.home-toast {
+  position: fixed;
+  top: 1.25rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 50;
+  padding: 0.7rem 1.4rem;
+  border-radius: 999px;
+  background: rgba(13, 23, 20, 0.96);
+  border: 1px solid rgba(240, 200, 97, 0.4);
+  color: var(--gold);
+  font-size: 0.88rem;
+  box-shadow: 0 1rem 2.5rem rgba(0, 0, 0, 0.5);
+  animation: home-drop 320ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes home-fade {
+  from { opacity: 0; }
+}
+@keyframes home-rise {
+  from { opacity: 0; transform: translateY(1rem); }
+}
+@keyframes home-drop {
+  from { opacity: 0; transform: translate(-50%, -1rem); }
+}
+
+/* --------------------------------------------------------------- responsive */
+
+/* Phones held sideways: almost no height, so the felt and the type both shrink. */
+@media (max-height: 520px) {
+  .home {
+    padding: 1rem;
+  }
+  .home__title {
+    font-size: clamp(2.2rem, 8vh, 3.4rem);
+    margin-bottom: 0.6rem;
+  }
+  .home__lede {
+    margin-bottom: 1.2rem;
+    font-size: 0.88rem;
+  }
+  .home__eyebrow {
+    margin-bottom: 0.5rem;
+  }
+  .home__play,
+  .home__rules {
+    padding: 0.7rem 2rem;
+    font-size: 0.95rem;
+  }
+  .signin__panel {
+    padding: 1.4rem 1.4rem 1rem;
+  }
+  .signin__body {
+    margin-bottom: 1rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home *,
+  .home-toast,
+  .signin,
+  .signin__panel {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* Phones, portrait: the two actions stack rather than squeeze. */
+@media (max-width: 480px) {
+  .home__lede {
+    font-size: 0.94rem;
+    margin-bottom: 1.8rem;
+  }
+  .home__actions {
+    flex-direction: column;
+    gap: 0.7rem;
+  }
+  .home__play,
+  .home__rules {
+    width: 100%;
+    max-width: 20rem;
+    padding: 0.95rem 1rem;
+    text-align: center;
+  }
+  .signin__panel {
+    padding: 1.6rem 1.2rem 1.2rem;
+  }
+}

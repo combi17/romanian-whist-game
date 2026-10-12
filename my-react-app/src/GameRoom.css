@@ -1,0 +1,110 @@
+body {
+    margin: 0;
+    height: 100vh;
+    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .table-container {
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    align-self: center;
+  }
+  
+  .table {
+    width: 70rem;
+    height: 45rem;
+    background: #3f8151; 
+    border-radius: 50%;
+    position: relative;
+    margin: auto;
+    border: 20px solid #2d2d2d; 
+    box-shadow: 0px 10px 14px 8px rgba(0, 0, 0, 0.6);
+  }
+  
+  .start-btn {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 15px 30px;
+    border: none;
+    background: #4caf50;
+    color: white;
+    cursor: pointer;
+    text-decoration: none;
+    font-family: 'DM Sans', sans-serif;
+    padding: 1rem 2.5rem;
+    border-radius: 0.75rem;
+    font-size: 1.25rem;
+    transition: 0.6s ease;
+  }
+  .start-btn:hover {
+    background-color: #3c5f48;
+    cursor: pointer;
+    transition: 0.6s ease;
+}
+.player {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  flex-direction: row-reverse;
+}
+
+.avatar {
+  width: 6rem;
+  height: 6rem;
+  border-radius: 50%;
+  box-shadow: 0px 10px 14px 8px rgba(5, 5, 5, 0.274);
+  border: 0.25rem solid rgb(119, 53, 119);;
+  z-index: 2;
+}
+
+.username-container {
+  background-color: rgb(119, 53, 119);
+  color: #f5f5f5;
+  border-top-right-radius: 1rem;
+  border-bottom-right-radius: 1rem;
+  border-top-left-radius: 0rem;
+  border-bottom-left-radius: 0rem;
+  width: 12rem; 
+  height: 4.5rem;
+  margin-left: -1.2rem;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 0.5rem 1rem 0.5rem 2rem;
+  box-sizing: border-box;
+}
+
+.username {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 1.25rem;
+  margin: 0;
+  margin-top: 0.25rem;
+  margin-bottom: 0.25rem;
+}
+
+.bet-info-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-left: -0.6rem;
+}
+
+.bet-info {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.9rem;
+  margin-left: -0.25rem;
+}
+
+.player1 { top: 95%; left: 40%; }
+.player2 { bottom: 20%; right: 80%; }
+.player3 { top: 10%; right: 75%; }
+.player4 { bottom: 20%; left: 90%; }
+.player5 { top: 10%; left: 84%; }
+.player6 { right: 45%; bottom: 92%; }

@@ -1,0 +1,259 @@
+/* ==========================================================================
+   Rules page
+   ========================================================================== */
+
+.rules {
+  min-height: 100dvh;
+  background:
+    radial-gradient(ellipse 90% 40% at 50% 0%, #1c2f28 0%, var(--bg-deep) 60%);
+  color: var(--text);
+  font-family: var(--font-ui);
+  padding-bottom: calc(4rem + var(--safe-b));
+  padding-left: var(--safe-l);
+  padding-right: var(--safe-r);
+}
+
+.rules__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  padding: calc(1.1rem + var(--safe-t)) 1.6rem 1.1rem;
+  max-width: 46rem;
+  margin: 0 auto;
+}
+
+.rules__back,
+.rules__practice {
+  color: var(--text-faint);
+  text-decoration: none;
+  font-size: 0.85rem;
+}
+.rules__back:hover,
+.rules__practice:hover {
+  color: var(--gold);
+}
+.rules__practice {
+  border: 1px solid rgba(240, 200, 97, 0.3);
+  border-radius: 999px;
+  padding: 0.4rem 0.9rem;
+  color: var(--gold-dim);
+}
+
+.rules__body {
+  max-width: 40rem;
+  margin: 0 auto;
+  padding: 1rem 1.6rem 0;
+}
+
+.rules__eyebrow {
+  margin: 0 0 0.6rem;
+  font-size: 0.65rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: rgba(240, 200, 97, 0.7);
+}
+
+.rules__title {
+  margin: 0 0 1rem;
+  font-family: var(--font-display);
+  font-size: clamp(2.4rem, 7vw, 3.6rem);
+  font-weight: 600;
+  line-height: 1;
+  color: var(--gold);
+}
+
+.rules__lede {
+  margin: 0 0 3rem;
+  font-size: 1.05rem;
+  line-height: 1.65;
+  color: #cbd8d2;
+}
+
+/* --------------------------------------------------------------- sections */
+
+.rules__section {
+  margin-bottom: 2.8rem;
+}
+
+.rules__h2 {
+  display: flex;
+  align-items: baseline;
+  gap: 0.7rem;
+  margin: 0 0 0.9rem;
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+/* Numbered because the rules follow the order of play: deck, plan, trump,
+   bid, play, score, win. */
+.rules__num {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--gold);
+  font-variant-numeric: tabular-nums;
+  border: 1px solid rgba(240, 200, 97, 0.35);
+  border-radius: 50%;
+  width: 1.7rem;
+  height: 1.7rem;
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+}
+
+.rules__section p {
+  margin: 0 0 0.9rem;
+  line-height: 1.65;
+  color: var(--text-dim);
+}
+.rules__section p strong,
+.rules__section li strong {
+  color: var(--text);
+  font-weight: 600;
+}
+.rules__section em {
+  color: var(--text);
+  font-style: italic;
+}
+
+.rules__list {
+  margin: 0 0 1rem;
+  padding-left: 1.1rem;
+  color: var(--text-dim);
+  line-height: 1.65;
+}
+.rules__list li {
+  margin-bottom: 0.5rem;
+}
+
+/* a rule you would otherwise argue about */
+.rules__rule {
+  padding: 0.9rem 1.1rem;
+  border-left: 2px solid var(--gold);
+  background: rgba(240, 200, 97, 0.07);
+  border-radius: 0 0.5rem 0.5rem 0;
+}
+
+.rules__aside {
+  font-size: 0.85rem !important;
+  color: var(--text-faint) !important;
+  border-left: 1px solid rgba(255, 255, 255, 0.14);
+  padding-left: 0.9rem;
+}
+
+.rules__plan {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  color: var(--gold) !important;
+  text-align: center;
+  padding: 1rem 0.5rem;
+  line-height: 1.8 !important;
+}
+
+.rules__zero {
+  padding: 1rem 1.2rem;
+  border: 1px solid rgba(240, 200, 97, 0.4);
+  border-radius: 0.7rem;
+  background: rgba(240, 200, 97, 0.09);
+  color: var(--gold) !important;
+  font-size: 1.02rem;
+}
+
+/* ----------------------------------------------------------------- tables */
+
+/*
+  The 6-player row is too wide for a phone, so the table scrolls
+  inside itself.
+*/
+.rules__table-wrap {
+  overflow-x: auto;
+  margin: 0 0 1.2rem;
+  -webkit-overflow-scrolling: touch;
+}
+
+.rules__table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+.rules__table th {
+  text-align: left;
+  font-size: 0.62rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  font-weight: 500;
+  padding-bottom: 0.5rem;
+}
+.rules__table td {
+  padding: 0.55rem 0.6rem 0.55rem 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  color: var(--text-dim);
+}
+.rules__table td.is-good {
+  color: var(--gold);
+  font-weight: 500;
+}
+.rules__table td.is-bad {
+  color: #f0a49e;
+  font-weight: 500;
+}
+
+/* ----------------------------------------------------------------- footer */
+
+.rules__footer {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  flex-wrap: wrap;
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.rules__cta {
+  padding: 0.8rem 1.8rem;
+  border-radius: 999px;
+  background: var(--gold);
+  color: #241d08;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+.rules__cta:hover {
+  background: #ffd97a;
+}
+
+@media (max-width: 560px) {
+  .rules__top {
+    padding-left: 1.1rem;
+    padding-right: 1.1rem;
+  }
+  .rules__body {
+    padding: 0.5rem 1.1rem 0;
+  }
+  .rules__lede {
+    font-size: 0.98rem;
+    margin-bottom: 2rem;
+  }
+  .rules__h2 {
+    font-size: 1.25rem;
+  }
+  .rules__section {
+    margin-bottom: 2.2rem;
+  }
+  .rules__table {
+    font-size: 0.82rem;
+    white-space: nowrap;
+  }
+  .rules__footer {
+    margin-top: 2rem;
+  }
+  .rules__cta {
+    width: 100%;
+    text-align: center;
+  }
+}

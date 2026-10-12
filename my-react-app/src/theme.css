@@ -1,0 +1,86 @@
+/* ==========================================================================
+   Whist Arena: design tokens shared by every page
+   ========================================================================== */
+
+:root {
+  /* felt and furniture */
+  --felt-core: #2d7a57;
+  --felt-mid: #1e5b41;
+  --felt-edge: #123626;
+  --rail: #22302b;
+  --rail-hi: #33453d;
+  --bg-deep: #101a17;
+  --bg-lift: #16231f;
+
+  /*
+    Brass is the accent colour. Nothing glows: gold outlines or fills, and
+    shadows are only dark ones cast by objects.
+  */
+  --gold: #f0c861;
+  --gold-dim: #b08f3c;
+
+  --plum: #8d4a8a;
+  --danger: #e2564d;
+  --danger-dim: #8d332d;
+
+  /* cards */
+  --paper: #f6f1e4;
+  --paper-edge: #ddd4bf;
+  --ink: #1d2825;
+  --ink-red: #c8443c;
+
+  /* type */
+  --text: #eef2f0;
+  --text-dim: #93a49d;
+  --text-faint: #62736c;
+
+  --card-w: 6.6rem;
+  --card-h: 9.3rem;
+  --radius: 0.55rem;
+
+  --table-w: clamp(32rem, 74vw, 82rem);
+  --table-h: clamp(19rem, 46vh, 42rem);
+
+  --font-display: 'Fraunces', Georgia, serif;
+  --font-ui: 'Space Grotesk', 'DM Sans', system-ui, sans-serif;
+
+  /*
+    Safe-area insets. index.html sets viewport-fit=cover so the felt reaches
+    the screen edges, and each shell pads by these. 0px off phones.
+  */
+  --safe-t: env(safe-area-inset-top, 0px);
+  --safe-r: env(safe-area-inset-right, 0px);
+  --safe-b: env(safe-area-inset-bottom, 0px);
+  --safe-l: env(safe-area-inset-left, 0px);
+}
+
+/* ==========================================================================
+   Base document styles, mostly for phones
+   ========================================================================== */
+
+html {
+  /* iOS inflates type in landscape without this, which breaks every layout
+     that was measured in rem. */
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  /* No rubber-band scroll behind the felt, and no pull-to-refresh in the
+     middle of a hand. */
+  overscroll-behavior: none;
+}
+
+/*
+  Touch targets. `manipulation` removes the 300ms double-tap delay, and the
+  iOS tap highlight is turned off.
+*/
+button,
+a,
+[role='button'],
+input,
+select,
+textarea {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}

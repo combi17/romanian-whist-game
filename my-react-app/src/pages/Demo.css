@@ -1,0 +1,284 @@
+/* Practice table setup screen. */
+
+.setup {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding:
+    calc(2rem + var(--safe-t))
+    calc(1rem + var(--safe-r))
+    calc(2rem + var(--safe-b))
+    calc(1rem + var(--safe-l));
+  overflow: auto;
+  background:
+    radial-gradient(ellipse 70% 55% at 50% 30%, #1e332c 0%, #101a17 68%);
+  font-family: 'Space Grotesk', 'DM Sans', system-ui, sans-serif;
+  color: #eef2f0;
+}
+
+.setup__panel {
+  width: min(100%, 30rem);
+  padding: 2.4rem 2.2rem;
+  border-radius: 1.2rem;
+  background: linear-gradient(170deg, #16231f, #0e1a16);
+  border: 1px solid rgba(240, 200, 97, 0.2);
+  box-shadow: 0 2rem 5rem rgba(0, 0, 0, 0.55);
+  text-align: center;
+}
+
+.setup__eyebrow {
+  display: block;
+  font-size: 0.64rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #62736c;
+  margin-bottom: 0.6rem;
+}
+
+.setup__title {
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: 2.6rem;
+  font-weight: 600;
+  color: #f0c861;
+  margin: 0 0 0.7rem;
+  line-height: 1;
+}
+
+.setup__lede {
+  color: #93a49d;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  margin: 0 0 2rem;
+}
+
+.setup__field {
+  margin-bottom: 1.6rem;
+  text-align: left;
+}
+
+.setup__label {
+  display: block;
+  font-size: 0.64rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #62736c;
+  margin-bottom: 0.55rem;
+}
+
+.setup__seats {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.seat-chip {
+  flex: 1;
+  height: 3rem;
+  border-radius: 0.7rem;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.05);
+  color: #eef2f0;
+  font-family: inherit;
+  font-size: 1.1rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+  transition: transform 150ms ease, background-color 150ms ease, border-color 150ms ease;
+}
+.seat-chip:hover {
+  transform: translateY(-2px);
+  border-color: rgba(240, 200, 97, 0.5);
+}
+.seat-chip.is-on {
+  background: #f0c861;
+  border-color: #f0c861;
+  color: #26200c;
+}
+.seat-chip:focus-visible {
+  outline: 2px solid #f0c861;
+  outline-offset: 2px;
+}
+
+.setup__hint {
+  display: block;
+  margin-top: 0.5rem;
+  font-size: 0.75rem;
+  color: #62736c;
+  font-variant-numeric: tabular-nums;
+}
+
+/* toggle */
+.toggle {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.8rem;
+  width: 100%;
+  padding: 0.85rem 0.9rem;
+  border-radius: 0.8rem;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.04);
+  cursor: pointer;
+  text-align: left;
+  font-family: inherit;
+  transition: border-color 160ms ease, background-color 160ms ease;
+}
+.toggle:hover {
+  border-color: rgba(240, 200, 97, 0.4);
+}
+.toggle.is-on {
+  border-color: rgba(240, 200, 97, 0.55);
+  background: rgba(240, 200, 97, 0.08);
+}
+.toggle:focus-visible {
+  outline: 2px solid #f0c861;
+  outline-offset: 2px;
+}
+
+.toggle__track {
+  flex: none;
+  width: 2.4rem;
+  height: 1.35rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.14);
+  position: relative;
+  margin-top: 0.1rem;
+  transition: background-color 200ms ease;
+}
+.toggle.is-on .toggle__track {
+  background: #f0c861;
+}
+.toggle__knob {
+  position: absolute;
+  top: 0.17rem;
+  left: 0.17rem;
+  width: 1rem;
+  height: 1rem;
+  border-radius: 50%;
+  background: #0e1a16;
+  transition: transform 220ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.toggle.is-on .toggle__knob {
+  transform: translateX(1.05rem);
+}
+
+.toggle__text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+.toggle__name {
+  font-size: 0.88rem;
+  color: #eef2f0;
+}
+.toggle__desc {
+  font-size: 0.72rem;
+  color: #62736c;
+  line-height: 1.35;
+}
+
+.setup__start {
+  width: 100%;
+  padding: 0.95rem;
+  border: none;
+  border-radius: 0.7rem;
+  background: #f0c861;
+  color: #26200c;
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 160ms ease, transform 160ms ease;
+}
+.setup__start:hover {
+  background: #ffd97a;
+  transform: translateY(-2px);
+}
+.setup__start:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}
+
+.setup__back {
+  margin-top: 0.9rem;
+  background: none;
+  border: none;
+  color: #62736c;
+  font-family: inherit;
+  font-size: 0.8rem;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.setup__back:hover {
+  color: #93a49d;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .setup * {
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Phones: the panel keeps its shape, the padding gives way. */
+@media (max-width: 480px) {
+  .setup__panel {
+    padding: 1.6rem 1.2rem;
+  }
+  .setup__title {
+    font-size: 2.2rem;
+  }
+  .setup__lede {
+    margin-bottom: 1.5rem;
+  }
+  .setup__field {
+    margin-bottom: 1.2rem;
+  }
+  .seat-chip {
+    height: 3.2rem;
+  }
+}
+
+/* A phone held sideways: ~390px of height for the whole panel, so it loses
+   its breathing room rather than making the reader scroll to find the button. */
+@media (max-height: 520px) {
+  .setup {
+    padding-top: calc(0.75rem + var(--safe-t));
+    padding-bottom: calc(0.75rem + var(--safe-b));
+    align-items: start;
+  }
+  .setup__panel {
+    padding: 1.1rem 1.2rem;
+  }
+  .setup__eyebrow {
+    margin-bottom: 0.3rem;
+  }
+  .setup__title {
+    font-size: 1.7rem;
+    margin-bottom: 0.4rem;
+  }
+  .setup__lede {
+    font-size: 0.8rem;
+    margin-bottom: 0.9rem;
+  }
+  .setup__field {
+    margin-bottom: 0.75rem;
+  }
+  .seat-chip {
+    height: 2.4rem;
+  }
+  .setup__hint {
+    margin-top: 0.35rem;
+  }
+  .toggle {
+    padding: 0.5rem 0.7rem;
+  }
+  .toggle__desc {
+    display: none;
+  }
+  .setup__start {
+    padding: 0.7rem;
+  }
+  .setup__back {
+    margin-top: 0.6rem;
+  }
+}

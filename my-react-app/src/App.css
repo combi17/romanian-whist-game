@@ -1,0 +1,360 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body, html {
+    height: 100%;
+    font-family: 'Inter', sans-serif;
+    background-color: #1b2d2a;
+}
+
+header {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    padding: 1rem 2rem;
+}
+
+.container {
+    height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;  
+}
+
+.title {
+    font-family: 'DM Sans', sans-serif;
+    font-size: clamp(3rem, 13vw, 5.5rem);
+    color: #f0c861;
+    margin-bottom: 1.5rem;
+}
+
+.subtitle {
+    font-family: 'DM Sans', sans-serif;
+    font-size: clamp(1.3rem, 6vw, 2rem);
+    color: #e5e5e5;
+    margin-bottom: 1.5rem;
+    margin-top: 1rem;
+}
+
+.btn-group {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+}
+
+.play-btn, .rules-btn {
+    text-decoration: none;
+    font-family: 'DM Sans', sans-serif;
+    padding: 1rem 2.5rem;
+    border-radius: 0.75rem;
+    font-size: 1.25rem;
+    transition: 0.4s ease;
+}
+
+.play-btn {
+    border: 2px solid #4a7c59;
+    background-color: #4a7c59;
+    color: #f5f5f5;
+}
+
+.rules-btn {
+    border: 2px solid #4a7c59;
+    background-color: transparent;
+    color: #f5f5f5;
+}
+
+.play-btn:hover {
+    border: 2px solid #3c5f48;
+    background-color: #3c5f48;
+    cursor: pointer;
+}
+
+.rules-btn:hover {
+    background-color: #4a7c59;
+    cursor: pointer;
+}
+
+.continue-container {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+}
+
+.email-btn {
+    background-color: #3c5f48;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    padding: 10px 16px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    width: min(250px, 100%);
+    height: 40px;
+    transition: background-color 0.3s, box-shadow 0.3s;
+  }
+
+  .email-btn:hover {
+    background-color: #4a7c59;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+  }
+
+  .custom-swal-login {
+    border-radius: 2rem !important;
+    height: 28rem !important;
+    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+  }
+  
+  .custom-swal-login .swal2-title {
+    margin-top: 2.5rem;
+    margin-bottom: 2rem;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  .custom-swal-login .swal2-footer {
+    margin-top: 4rem;
+    font-size: 1rem;
+  }
+
+  .terms-cond {
+    text-decoration: none;
+    color: white;
+    font-weight: bold;
+  }
+
+  .custom-toast {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 1rem;
+    padding: 0.5rem;
+    border-radius: 0.75rem;
+    background-color: #222222;
+    color: rgb(226, 224, 224);
+    width: 5rem;
+    height: 4rem;
+  }
+
+  .custom-toast .swal2-icon {
+    transform: scale(0.6);
+    margin-top: 0.25rem;
+  }
+
+  .custom-toast .swal2-title {
+    margin-top: 1rem;
+  }
+
+/*login page*/
+
+.login-card{
+    box-sizing: border-box;
+    display:flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 30rem;
+    background:#1b2d2a;
+    margin-top:6rem;
+    margin-bottom: 5.5rem;
+    padding: 1rem calc(1rem + var(--safe-l)) calc(1rem + var(--safe-b)) calc(1rem + var(--safe-r));
+}
+
+.login-form{
+    display:flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: min(25rem, 100%);
+    border: 0.5rem solid rgba(255,255,255,.2);
+    backdrop-filter: blur(1.25rem);
+    border-radius: 2rem;
+    background: transparent;
+    color: #fff;
+    padding: 2rem;
+}
+
+.input-wrapper {
+    width: 100%;
+    padding: 0.5rem;
+}
+
+.input-wrapper h1{
+    font-size: clamp(2.2rem, 9vw, 3rem);
+    text-align: center;
+    margin-top: 0.5rem;
+    margin-bottom: 1.5rem;
+    color:#f0c861;
+}
+
+.input-wrapper .login-input{
+    width: 100%;
+    height: 3.6rem;
+    background: transparent;
+    border: 2px solid rgba(255,255,255,0.2);
+    outline:none;
+    border-radius: 4rem;
+    font-size: 20px;
+    color: #fff;
+    padding: 1rem;
+}
+
+.input-wrapper .login-input::placeholder{
+    font-size:20px;
+}
+
+.forgot-password{
+    display: flex;
+    justify-content:center;
+    font-size: 1rem;
+    margin-top: 1.25rem;
+    margin-bottom: 1rem;
+}
+
+.forgot-password a{
+    color: #fff;
+    text-decoration: none;  
+}
+
+.forgot-password a:hover{
+    text-decoration: underline;
+}
+
+.login-btn {
+    text-decoration: none;
+    font-family: "DM Sans", sans-serif;
+    height:3.5rem;
+    padding: 0.6rem 1.2rem;
+    font-size: 1rem;
+    border-radius: 0.5rem;
+    border: 2px solid #4a7c59;
+    background-color: #4a7c59;
+    color: #f5f5f5;
+    transition: 0.3s ease;
+}
+
+.login-btn:hover {
+    background-color: #3c5f48;
+    border-color: #3c5f48;
+    cursor: pointer;
+}
+
+/*signup pg*/
+
+.login-card{
+    margin-top:4.5rem;
+    margin-bottom: 4.5rem;
+}
+
+.login-form-su{
+    display:flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: min(25rem, 100%);
+    border: 0.5rem solid rgba(255,255,255,.2);
+    backdrop-filter: blur(1.25rem);
+    border-radius: 2rem;
+    background: transparent;
+    color: #fff;
+    padding: 1.75rem;
+    gap:1rem;
+}
+
+.login-form-su h1{
+    font-size: clamp(2.2rem, 9vw, 3rem);
+    text-align: center;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+    color:#f0c861;
+}
+
+.input-wrapper-su{
+    width: 100%;
+    padding: 0 0.5rem;
+}
+
+.input-wrapper-su .login-input-su{
+    width: 100%;
+    height: 3.6rem;
+    background: transparent;
+    border: 2px solid rgba(255,255,255,0.2);
+    outline:none;
+    border-radius: 4rem;
+    font-size: 20px;
+    color: #fff;
+    padding: 1rem;
+}
+
+.login-btn-su {
+    text-decoration: none;
+    font-family: "DM Sans", sans-serif;
+    height:3.5rem;
+    padding: 0.6rem 1.2rem;
+    font-size: 1rem;
+    border-radius: 0.5rem;
+    border: 2px solid #4a7c59;
+    background-color: #4a7c59;
+    color: #f5f5f5;
+    transition: 0.3s ease;
+    margin-top: 0.5rem;
+}
+
+.link-register{
+    margin-left: .5rem;
+}
+/* --------------------------------------------------------------- phones ---
+
+   The sign-in and sign-up cards cap at the viewport width on a phone. */
+@media (max-width: 480px) {
+    .login-card {
+        margin-top: 2rem;
+        margin-bottom: 2rem;
+        min-height: 0;
+    }
+
+    .login-form,
+    .login-form-su {
+        border-width: 0.35rem;
+        border-radius: 1.5rem;
+        padding: 1.25rem;
+    }
+
+    .login-form-su {
+        gap: 0.75rem;
+    }
+
+    .input-wrapper .login-input,
+    .input-wrapper-su .login-input-su {
+        /* 16px or larger, or iOS zooms the page the moment the field is
+           focused and never zooms back out */
+        font-size: 1rem;
+    }
+
+    .input-wrapper .login-input::placeholder {
+        font-size: 1rem;
+    }
+
+    .login-btn,
+    .login-btn-su {
+        width: 100%;
+    }
+
+    .btn-group,
+    .continue-container {
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .play-btn,
+    .rules-btn {
+        width: min(20rem, 100%);
+        text-align: center;
+    }
+}

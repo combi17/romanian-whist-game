@@ -1,0 +1,21 @@
+# dependencies
+node_modules/
+
+# build output
+dist/
+.vite/
+
+# env / secrets
+.env
+.env.local
+.env.*.local
+!.env.example
+
+# supabase cli
+supabase/.temp/
+supabase/.branches/
+
+# editor / os
+.DS_Store
+Thumbs.db
+*.log

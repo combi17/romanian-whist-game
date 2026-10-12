@@ -1,0 +1,259 @@
+/* ==========================================================================
+   Side rail: standings and every bid of the game
+   ========================================================================== */
+
+.rail {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  width: 17.5rem;
+  padding: 0 0 1rem 1.2rem;
+  min-height: 0;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.16) transparent;
+}
+
+.panel {
+  border-radius: 0.8rem;
+  padding: 0.85rem 0.9rem;
+  background: rgba(11, 19, 16, 0.86);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.panel__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.panel__title {
+  margin: 0 0 0.6rem;
+  font-size: 0.62rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-weight: 500;
+  color: var(--text-faint);
+}
+
+.panel__hint {
+  font-size: 0.56rem;
+  color: var(--text-faint);
+  opacity: 0.7;
+  margin-bottom: 0.6rem;
+}
+
+.panel__empty {
+  margin: 0;
+  font-size: 0.75rem;
+  font-style: italic;
+  color: var(--text-faint);
+  line-height: 1.4;
+}
+
+/* --------------------------------------------------------------- standings */
+
+.standings-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.standings-list__row {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.3rem 0.35rem;
+  border-radius: 0.4rem;
+}
+.standings-list__row.is-you {
+  background: rgba(141, 74, 138, 0.22);
+}
+
+.standings-list__rank {
+  width: 0.9rem;
+  font-size: 0.66rem;
+  color: var(--text-faint);
+  font-variant-numeric: tabular-nums;
+}
+
+.standings-list__avatar {
+  width: 1.35rem;
+  height: 1.35rem;
+  border-radius: 50%;
+  object-fit: cover;
+  flex: none;
+}
+
+.standings-list__name {
+  flex: 1;
+  min-width: 0;
+  font-size: 0.78rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.standings-list__score {
+  font-size: 0.82rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+.standings-list__score.is-zero {
+  color: var(--gold);
+}
+
+/* ------------------------------------------------------------ bid history */
+
+/*
+  Names stay fixed while the rounds scroll. Five rounds fit, and the view
+  stays on the newest.
+*/
+.history {
+  display: grid;
+  grid-template-columns: 4.6rem 1fr;
+  gap: 0 0.4rem;
+  align-items: start;
+}
+
+.history__names {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.history__corner {
+  height: 1.05rem;
+}
+
+.history__name {
+  height: 1.35rem;
+  display: flex;
+  align-items: center;
+  font-size: 0.7rem;
+  color: var(--text-dim);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.history__name.is-you {
+  color: var(--text);
+  font-weight: 500;
+}
+
+.history__streak-label {
+  height: 1.2rem;
+  margin-top: 0.5rem;
+  padding-top: 0.5rem;
+  display: flex;
+  align-items: center;
+  font-size: 0.55rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.history__scroller {
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.16) transparent;
+  padding-bottom: 0.25rem;
+}
+.history__scroller::-webkit-scrollbar {
+  height: 5px;
+}
+.history__scroller::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.16);
+  border-radius: 3px;
+}
+
+/* one 1.55rem column per round; five fit in the rail */
+.history__grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  width: max-content;
+  min-width: 100%;
+}
+
+.history__row {
+  display: grid;
+  grid-template-columns: repeat(var(--rounds), 1.55rem);
+  gap: 0.15rem;
+}
+
+.history__round {
+  height: 1.05rem;
+  display: grid;
+  place-items: center;
+  font-size: 0.58rem;
+  color: var(--text-faint);
+  font-variant-numeric: tabular-nums;
+}
+
+.history__cell {
+  height: 1.35rem;
+  display: grid;
+  place-items: center;
+  border-radius: 0.28rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  cursor: default;
+}
+
+/* made the contract or missed it */
+.history__cell.is-hit {
+  background: rgba(240, 200, 97, 0.2);
+  color: var(--gold);
+  border: 1px solid rgba(240, 200, 97, 0.35);
+}
+.history__cell.is-miss {
+  background: rgba(226, 86, 77, 0.14);
+  color: #f0a49e;
+  border: 1px solid rgba(226, 86, 77, 0.28);
+}
+
+/* ------------------------------------------------------------- the streaks */
+
+.history__streaks {
+  grid-column: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  margin-top: 0.5rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.streak {
+  height: 1.2rem;
+  display: flex;
+  align-items: center;
+  font-size: 0.66rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-faint);
+  cursor: default;
+}
+.streak--exact {
+  color: var(--gold);
+}
+.streak--miss {
+  color: var(--danger);
+}
+/* one away from the bonus (or the penalty) */
+.streak.is-hot {
+  font-weight: 700;
+}
+
+@media (max-width: 1100px) {
+  .rail {
+    display: none;
+  }
+}

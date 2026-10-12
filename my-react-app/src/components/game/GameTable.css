@@ -1,0 +1,1778 @@
+/* ==========================================================================
+   Whist Arena: the table
+   ========================================================================== */
+
+.table-shell {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  grid-template-rows: auto 1fr;
+  grid-template-columns: auto 1fr;
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 38%, #1c2f28 0%, var(--bg-deep) 70%);
+  color: var(--text);
+  font-family: var(--font-ui);
+  overflow: hidden;
+  overscroll-behavior: none;
+
+  /* the felt paints edge to edge; the controls stay clear of the hardware */
+  padding: var(--safe-t) var(--safe-r) var(--safe-b) var(--safe-l);
+}
+
+/* ------------------------------------------------------------------ top bar */
+
+.topbar {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  padding: 0.9rem 1.6rem;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.36), transparent);
+  z-index: 5;
+  /* Everything in the bar can shrink so it fits on a 390px phone. */
+  min-width: 0;
+}
+.topbar > * {
+  min-width: 0;
+}
+
+.topbar__eyebrow {
+  display: block;
+  font-size: 0.64rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  margin-bottom: 0.1rem;
+}
+
+.topbar__round-num,
+.topbar__hand-num {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  font-weight: 600;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.topbar__round-of {
+  font-size: 0.9rem;
+  color: var(--text-faint);
+  font-weight: 400;
+}
+
+.topbar__leave {
+  margin-left: 0.4rem;
+}
+
+.sound-toggle {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.42rem 0.8rem;
+  border-radius: 0.55rem;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: transparent;
+  color: var(--text-dim);
+  font-family: var(--font-ui);
+  font-size: 0.78rem;
+  cursor: pointer;
+  transition: border-color 150ms ease, color 150ms ease;
+}
+.sound-toggle:hover {
+  border-color: rgba(240, 200, 97, 0.5);
+  color: var(--text);
+}
+.sound-toggle:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+}
+.sound-toggle.is-off {
+  color: var(--text-faint);
+}
+
+/* trump badge */
+.trump {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+.trump--empty {
+  width: 3rem;
+}
+/* Trump is checked before nearly every card, so it gets a full card. */
+.trump__card {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.3rem 0.7rem 0.3rem 0.3rem;
+  border-radius: 0.6rem;
+  background: rgba(240, 200, 97, 0.09);
+  border: 1px solid rgba(240, 200, 97, 0.32);
+}
+.trump__suit {
+  font-size: 1.9rem;
+  line-height: 1;
+}
+.trump__suit--heart,
+.trump__suit--diamond {
+  color: var(--ink-red);
+}
+.trump__suit--spade,
+.trump__suit--club {
+  color: #e8ebe9;
+}
+.trump--none .trump__none-label {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-style: italic;
+  color: var(--gold);
+}
+
+/* --------------------------------------------------------------------- felt */
+
+/*
+  The felt and your corner share one centred column, so your hand sits
+  against the table edge on wide screens too.
+*/
+.stage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  min-height: 0;
+  padding: 0 1rem 0.5rem;
+}
+
+/* The rail: a padded leather edge with a brass bead on the inside lip. */
+.felt {
+  position: relative;
+  width: var(--table-w);
+  height: var(--table-h);
+  border-radius: 50%;
+
+  /*
+    Two layers in one box: the felt in the padding box and the rail in the
+    border box. border-image would drop the border-radius.
+  */
+  border: 1.1rem solid transparent;
+  background:
+    radial-gradient(ellipse 60% 68% at 50% 36%, var(--felt-core) 0%, var(--felt-mid) 44%, var(--felt-edge) 100%)
+      padding-box,
+    linear-gradient(165deg, #4a6058 0%, #24322c 42%, #131c18 100%) border-box;
+
+  /*
+    Outer shadows only. Inset shadows combined with the transparent border
+    and border-box gradient hang Chrome's renderer. The inner shading is on
+    .felt__shade instead.
+  */
+  box-shadow:
+    0 3rem 6rem rgba(0, 0, 0, 0.7),
+    0 0 0 0.7rem rgba(0, 0, 0, 0.3);
+}
+
+/* Inner lighting: the brass bead on the lip, and the felt falling into shadow. */
+.felt__shade {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  pointer-events: none;
+  box-shadow:
+    inset 0 0 0 2px rgba(240, 200, 97, 0.26),
+    inset 0 0 5rem rgba(0, 0, 0, 0.62),
+    inset 0 1rem 3rem rgba(255, 255, 255, 0.05);
+}
+
+/*
+  Woven texture. A single coarse gradient is much cheaper to rasterise than
+  a fine cross-hatch.
+*/
+.felt__grain {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  opacity: 0.09;
+  background-image:
+    repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.6) 0 1px, transparent 1px 7px);
+  pointer-events: none;
+}
+
+/* the brass inlay ring that marks the playing area */
+.felt__ring {
+  position: absolute;
+  inset: 14%;
+  border-radius: 50%;
+  border: 1px solid rgba(240, 200, 97, 0.16);
+  box-shadow: inset 0 0 3rem rgba(0, 0, 0, 0.22);
+  pointer-events: none;
+}
+
+/* deck stack at the centre, where the deal starts */
+.deck {
+  position: absolute;
+  left: calc(50% - 3.4rem);
+  top: 50%;
+  transform: translateY(-50%);
+  width: 2.5rem;
+  height: 3.5rem;
+}
+.deck__card {
+  position: absolute;
+  inset: 0;
+  border-radius: 0.3rem;
+  background: linear-gradient(150deg, #2b4a7a, #1b3358);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  transform: translate(calc(var(--i) * 1px), calc(var(--i) * -1.5px));
+  box-shadow: 0 0.2rem 0.5rem rgba(0, 0, 0, 0.4);
+}
+
+/* -------------------------------------------------------------------- seats */
+
+.seat {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  z-index: 3;
+}
+
+.seat__hand {
+  display: flex;
+  justify-content: center;
+  /*
+     Shorter than the cards so the stack tucks behind the plate. flex-end makes
+     it overflow upward instead of over the name.
+  */
+  align-items: flex-end;
+  height: 2.6rem;
+}
+
+.seat__card-slot {
+  display: block;
+  margin-left: -1.35rem;
+  animation: deal-to-seat 460ms cubic-bezier(0.22, 1, 0.36, 1) backwards;
+  animation-delay: calc(var(--deal-index) * 55ms);
+}
+.seat__card-slot:first-child {
+  margin-left: 0;
+}
+
+/*
+  Dealt cards fly from the deck to the seat. The start point is computed
+  from the seat position, so one keyframe works for every table size.
+*/
+@keyframes deal-to-seat {
+  from {
+    transform:
+      translate(
+        calc(var(--table-w) * (50 - var(--sx)) / 100),
+        calc(var(--table-h) * (50 - var(--sy)) / 100)
+      )
+      scale(0.55) rotate(-160deg);
+    opacity: 0;
+  }
+  35% {
+    opacity: 1;
+  }
+  to {
+    transform: none;
+    opacity: 1;
+  }
+}
+
+/* ------------------------------------------------------------------- plates */
+
+.plate {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.4rem 0.75rem 0.4rem 0.4rem;
+  border-radius: 999px;
+  background: rgba(11, 19, 16, 0.94);
+  /* no backdrop-filter: it forces the whole felt beneath into a blurred texture every frame, which is ruinous for a full-screen animated background */
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  box-shadow: 0 0.5rem 1.4rem rgba(0, 0, 0, 0.45);
+  transition: border-color 220ms ease, transform 220ms ease;
+  white-space: nowrap;
+}
+
+.plate.is-active {
+  border-color: var(--gold);
+  box-shadow:
+    0 0 0 1px var(--gold),
+    0 0.5rem 1.4rem rgba(0, 0, 0, 0.5);
+  transform: translateY(-2px);
+}
+
+/* on contract: you have exactly what you promised */
+.plate.is-on-contract {
+  background: rgba(30, 32, 16, 0.86);
+  border-color: rgba(240, 200, 97, 0.5);
+}
+
+/* overshot: mathematically dead for this round */
+.plate.is-overshot {
+  background: rgba(38, 16, 15, 0.86);
+  border-color: rgba(226, 86, 77, 0.55);
+}
+
+.plate__avatar-wrap {
+  position: relative;
+  flex: none;
+}
+
+.plate__avatar {
+  width: 2.4rem;
+  height: 2.4rem;
+  border-radius: 50%;
+  object-fit: cover;
+  background: var(--bg-lift);
+  border: 2px solid rgba(255, 255, 255, 0.14);
+  display: block;
+}
+
+.plate.is-you .plate__avatar {
+  border-color: var(--plum);
+}
+
+.plate__first-bidder {
+  position: absolute;
+  bottom: -0.25rem;
+  right: -0.35rem;
+  font-size: 0.52rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  padding: 0.1rem 0.25rem;
+  border-radius: 0.3rem;
+  background: var(--gold);
+  color: #29200a;
+}
+
+.plate__body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-width: 0;
+}
+
+.plate__header {
+  display: flex;
+  align-items: baseline;
+  gap: 0.35rem;
+}
+
+.plate__name {
+  font-size: 0.85rem;
+  font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 7.5rem;
+}
+
+.plate__tag {
+  font-size: 0.55rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-faint);
+  border: 1px solid currentColor;
+  border-radius: 0.25rem;
+  padding: 0 0.2rem;
+}
+.plate__tag--you {
+  color: #c79ac5;
+}
+
+.plate__contract {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  height: 0.95rem;
+}
+
+.plate__waiting {
+  font-size: 0.7rem;
+  color: var(--text-faint);
+  font-style: italic;
+}
+
+.plate__count {
+  font-size: 0.72rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-dim);
+}
+.plate__count-sep {
+  opacity: 0.45;
+  margin: 0 0.05rem;
+}
+.plate.is-on-contract .plate__count {
+  color: var(--gold);
+}
+.plate.is-overshot .plate__count {
+  color: var(--danger);
+}
+
+/* --- the contract tracker ------------------------------------------------ */
+
+.pips {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.16rem;
+}
+
+.pip {
+  width: 0.42rem;
+  height: 0.42rem;
+  border-radius: 50%;
+  border: 1.5px solid var(--text-faint);
+  transition: background-color 200ms ease, border-color 200ms ease;
+}
+
+.pip.is-filled {
+  background: var(--gold);
+  border-color: var(--gold);
+  transform: scale(1.15);
+}
+
+.pip--over {
+  background: var(--danger);
+  border-color: var(--danger);
+  transform: scale(1.15);
+}
+
+.pip--nil {
+  width: auto;
+  height: auto;
+  border: none;
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: var(--text-dim);
+  letter-spacing: 0.04em;
+}
+.pip--nil.is-broken {
+  color: var(--danger);
+  text-decoration: line-through;
+}
+
+/* -------------------------------------------------------------------- cards */
+
+.card {
+  position: relative;
+  width: var(--card-w);
+  height: var(--card-h);
+  border-radius: var(--radius);
+  background: linear-gradient(160deg, var(--paper) 0%, var(--paper-edge) 100%);
+  border: 1px solid rgba(0, 0, 0, 0.28);
+  box-shadow: 0 0.35rem 0.9rem rgba(0, 0, 0, 0.42);
+  display: block;
+  padding: 0;
+  font-family: var(--font-ui);
+  user-select: none;
+  flex: none;
+}
+
+.card--black {
+  color: var(--ink);
+}
+.card--red {
+  color: var(--ink-red);
+}
+
+.card__corner {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  line-height: 0.95;
+  font-weight: 700;
+}
+.card__corner--tl {
+  top: 0.3rem;
+  left: 0.34rem;
+}
+.card__corner--br {
+  bottom: 0.3rem;
+  right: 0.34rem;
+  transform: rotate(180deg);
+}
+/*
+  Type is sized relative to the card, since the same card renders at five
+  widths. The centre suit stays under a third of the card.
+*/
+.card__rank {
+  font-size: calc(var(--card-w) * 0.2);
+  font-variant-numeric: tabular-nums;
+}
+.card__pip {
+  font-size: calc(var(--card-w) * 0.155);
+}
+.card__center {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-size: calc(var(--card-w) * 0.3);
+  opacity: 0.82;
+}
+
+.card--back {
+  background: linear-gradient(150deg, #2f5183 0%, #1d3760 55%, #172c4d 100%);
+  border-color: rgba(255, 255, 255, 0.14);
+}
+.card__back-pattern {
+  position: absolute;
+  inset: 0.28rem;
+  border-radius: calc(var(--radius) - 0.15rem);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background-image:
+    repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.09) 0 2px, transparent 2px 6px),
+    repeating-linear-gradient(-45deg, rgba(255, 255, 255, 0.06) 0 2px, transparent 2px 6px);
+}
+
+.card--small {
+  --card-w: 2.5rem;
+  --card-h: 3.5rem;
+}
+.card--small .card__corner--br {
+  display: none; /* one corner is enough once the card is thumbnail-sized */
+}
+
+.card--tiny {
+  --card-w: 1.85rem;
+  --card-h: 2.6rem;
+}
+.card--tiny .card__corner {
+  display: none;
+}
+
+.card.is-interactive {
+  cursor: pointer;
+  /* transform only: animating box-shadow forces a repaint every frame, and
+     with a full hand on screen that is what made the table feel sticky */
+  transition: transform 160ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  will-change: transform;
+}
+.card.is-interactive:hover,
+.card.is-interactive:focus-visible {
+  transform: translateY(-1.1rem);
+  outline: none;
+}
+.card.is-interactive:focus-visible {
+  border-color: var(--gold);
+  box-shadow: 0 0 0 2px var(--gold), 0 0.6rem 1.2rem rgba(0, 0, 0, 0.5);
+}
+
+/*
+  Selected by a first tap on touch screens (see Fan in GameTable.jsx).
+  The card lifts clear of its neighbours and the second tap plays it.
+*/
+.card.is-armed {
+  transform: translateY(-1.6rem);
+  border-color: var(--gold);
+  box-shadow: 0 0 0 2px var(--gold), 0 0.6rem 1.2rem rgba(0, 0, 0, 0.5);
+}
+
+.card--muted {
+  filter: grayscale(0.75) brightness(0.62);
+}
+
+/* -------------------------------------------------------------- trick area */
+
+.trick {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+
+  /*
+    Above the seats and plates, so face-down stacks and plates never
+    cover the trick on a small screen.
+  */
+  z-index: 4;
+
+  /*
+    Radius of the ring of played cards. Wide enough to keep the trump card
+    at the centre visible.
+  */
+  --orbit-x: 9.5rem;
+  --orbit-y: 6.6rem;
+}
+
+.trick__slot {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  /* fan the played cards out around the centre by who played them */
+  transform:
+    translate(-50%, -50%)
+    translate(
+      calc(cos(var(--rel) * 1turn / var(--n) + 0.25turn) * var(--orbit-x)),
+      calc(sin(var(--rel) * 1turn / var(--n) + 0.25turn) * var(--orbit-y))
+    )
+    rotate(calc(var(--rel) * 8deg - 12deg));
+  animation: play-in 320ms cubic-bezier(0.22, 1, 0.36, 1) backwards;
+  transition: transform 520ms cubic-bezier(0.4, 0, 0.2, 1), opacity 520ms ease;
+}
+
+@keyframes play-in {
+  from {
+    transform:
+      translate(-50%, -50%)
+      translate(
+        calc(var(--table-w) * (var(--sx) - 50) / 100),
+        calc(var(--table-h) * (var(--sy) - 50) / 100)
+      )
+      scale(0.85);
+    opacity: 0;
+  }
+}
+
+/* Marks the card currently winning the trick. */
+/* the card that is winning sits on top of the ones it beat, badge and all */
+.trick__slot.is-winning {
+  z-index: 1;
+}
+
+.trick__slot.is-winning .card {
+  border-color: var(--gold);
+  box-shadow:
+    0 0 0 2px var(--gold),
+    0 0.35rem 0.9rem rgba(0, 0, 0, 0.42);
+}
+
+.trick__winning {
+  position: absolute;
+  left: 50%;
+  top: calc(100% + 0.3rem);
+  transform: translateX(-50%);
+  padding: 0.12rem 0.4rem;
+  border-radius: 0.3rem;
+  background: var(--gold);
+  color: #26200c;
+  font-size: 0.5rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+/* the completed trick is swept toward whoever won it */
+.trick__slot.is-sweeping {
+  transform:
+    translate(-50%, -50%)
+    translate(
+      calc(var(--table-w) * (var(--wx) - 50) / 100),
+      calc(var(--table-h) * (var(--wy) - 50) / 100)
+    )
+    scale(0.5) rotate(12deg);
+  opacity: 0;
+  transition-delay: 700ms;
+}
+
+/* ------------------------------------------------------------------- banner */
+
+.banner {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  pointer-events: none;
+  animation: banner-in 1600ms ease forwards;
+  z-index: 4;
+}
+
+.banner__round {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 2.3rem;
+  font-weight: 600;
+  color: var(--gold);
+  text-shadow: 0 0.2rem 1.5rem rgba(0, 0, 0, 0.7);
+}
+.banner__cards {
+  display: block;
+  font-size: 0.85rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--text);
+  margin-top: 0.2rem;
+}
+.banner__blind {
+  display: block;
+  margin-top: 0.4rem;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 0.95rem;
+  color: #e6b8e4;
+}
+
+@keyframes banner-in {
+  0% { opacity: 0; transform: translate(-50%, -50%) scale(0.86); }
+  14% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+  74% { opacity: 1; }
+  100% { opacity: 0; transform: translate(-50%, -56%) scale(1); }
+}
+
+/* --------------------------------------------------------------- your dock */
+
+/* Your plate sits next to your hand: your bid and the cards to make it. */
+.dock {
+  width: var(--table-w);
+  max-width: 100%;
+  display: grid;
+  grid-template-columns: minmax(10rem, 1fr) auto minmax(10rem, 1fr);
+  align-items: end;
+  gap: 1rem;
+  z-index: 4;
+}
+
+.dock__plate {
+  justify-self: end;
+  padding-bottom: 0.9rem;
+}
+
+.dock__hand {
+  display: grid;
+  place-items: end center;
+  min-height: calc(var(--card-h) + 1.4rem);
+}
+
+.fan {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  padding-top: 1.2rem;
+}
+
+.fan__slot {
+  display: block;
+  margin-left: -1.6rem;
+  transform: rotate(var(--angle)) translateY(calc(var(--lift) * 0.7rem));
+  transform-origin: 50% 130%;
+  animation: deal-to-hand 520ms cubic-bezier(0.22, 1, 0.36, 1) backwards;
+  animation-delay: calc(var(--deal-index) * 55ms);
+  transition: transform 180ms ease;
+}
+.fan__slot:first-child {
+  margin-left: 0;
+}
+.fan__slot:hover {
+  z-index: 2;
+}
+
+@keyframes deal-to-hand {
+  from {
+    transform: translate(0, -14rem) scale(0.5) rotate(-200deg);
+    opacity: 0;
+  }
+  30% {
+    opacity: 1;
+  }
+  to {
+    transform: rotate(var(--angle)) translateY(calc(var(--lift) * 0.7rem));
+    opacity: 1;
+  }
+}
+
+.dock__action {
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-end;
+  padding-bottom: 0.9rem;
+}
+
+/* ------------------------------------------------------------------ bidding */
+
+.bidding {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.5rem;
+  padding: 0.85rem 1rem;
+  border-radius: 0.9rem;
+  background: rgba(12, 20, 18, 0.9);
+  border: 1px solid rgba(240, 200, 97, 0.24);
+  box-shadow: 0 1rem 2.5rem rgba(0, 0, 0, 0.5);
+  animation: rise-in 260ms ease backwards;
+}
+
+.bidding__label {
+  font-size: 0.78rem;
+  color: var(--text-dim);
+}
+
+.bidding__row {
+  display: flex;
+  gap: 0.35rem;
+  flex-wrap: wrap;
+}
+
+.bid-chip {
+  width: 2.4rem;
+  height: 2.4rem;
+  border-radius: 0.6rem;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text);
+  font-family: var(--font-ui);
+  font-size: 1rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+  transition: transform 140ms ease, background-color 140ms ease, border-color 140ms ease;
+}
+.bid-chip:hover:not(:disabled) {
+  background: var(--gold);
+  border-color: var(--gold);
+  color: #26200c;
+  transform: translateY(-2px);
+}
+.bid-chip:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+}
+.bid-chip:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+.bid-chip.is-forbidden {
+  border-color: var(--danger-dim);
+  color: var(--danger);
+  opacity: 0.55;
+  text-decoration: line-through;
+}
+
+.bidding__rule {
+  font-size: 0.68rem;
+  color: var(--text-faint);
+  max-width: 15rem;
+  text-align: left;
+  line-height: 1.35;
+}
+
+.waiting {
+  font-size: 0.8rem;
+  color: var(--text-faint);
+  font-style: italic;
+  padding-bottom: 0.5rem;
+}
+.waiting.is-accent {
+  color: var(--gold);
+  font-style: normal;
+  font-weight: 500;
+}
+
+/* ------------------------------------------------------------------- modals */
+
+.curtain {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  background: rgba(6, 12, 10, 0.86);
+  /* see note on .plate: solid translucency instead of a full-screen backdrop blur */
+  z-index: 20;
+  animation: fade-in 220ms ease;
+}
+
+.curtain__panel {
+  background: linear-gradient(170deg, var(--bg-lift), #0e1a16);
+  border: 1px solid rgba(240, 200, 97, 0.22);
+  border-radius: 1.1rem;
+  padding: 2rem 2.2rem;
+  width: min(100%, 34rem);
+  max-width: 100%;
+  text-align: center;
+  box-shadow: 0 2rem 5rem rgba(0, 0, 0, 0.6);
+  animation: rise-in 300ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.curtain__panel--wide {
+  width: min(100%, 40rem);
+}
+
+.curtain__eyebrow {
+  display: block;
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  margin-bottom: 0.5rem;
+}
+
+.curtain__title {
+  font-family: var(--font-display);
+  font-size: 1.9rem;
+  font-weight: 600;
+  margin: 0 0 0.5rem;
+  color: var(--gold);
+}
+.curtain__sub {
+  font-size: 1rem;
+  color: var(--text-dim);
+  font-weight: 400;
+}
+
+.curtain__body {
+  color: var(--text-dim);
+  margin: 0 0 1.4rem;
+  font-size: 0.92rem;
+}
+
+.curtain__zero {
+  font-family: var(--font-display);
+  font-style: italic;
+  color: var(--gold);
+  margin: 0 0 1.2rem;
+}
+
+/* score table */
+.score-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0 1.5rem;
+  font-size: 0.88rem;
+}
+.score-table th {
+  font-size: 0.62rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  font-weight: 500;
+  padding-bottom: 0.5rem;
+  text-align: right;
+}
+.score-table th:first-child,
+.score-table td:first-child {
+  text-align: left;
+}
+.score-table td {
+  padding: 0.45rem 0.3rem;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+}
+.score-table tr.is-exact .score-table__delta {
+  color: var(--gold);
+}
+.score-table tr.is-missed .score-table__delta {
+  color: var(--danger);
+}
+.score-table__bonus {
+  display: block;
+  font-size: 0.6rem;
+  color: var(--text-faint);
+}
+.score-table__total {
+  font-weight: 600;
+}
+.score-table__total.is-zero {
+  color: var(--gold);
+}
+
+/* standings */
+.standings {
+  list-style: none;
+  padding: 0;
+  margin: 1.2rem 0 1.6rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+.standings__row {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.5rem 0.8rem;
+  border-radius: 0.6rem;
+  background: rgba(255, 255, 255, 0.04);
+}
+.standings__row.is-winner {
+  background: rgba(240, 200, 97, 0.12);
+  border: 1px solid rgba(240, 200, 97, 0.35);
+}
+.standings__avatar {
+  width: 1.9rem;
+  height: 1.9rem;
+  border-radius: 50%;
+  object-fit: cover;
+}
+.standings__name {
+  flex: 1;
+  text-align: left;
+  font-size: 0.9rem;
+}
+.standings__score {
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+}
+.standings__score.is-zero {
+  color: var(--gold);
+}
+
+/* ------------------------------------------------------------------ buttons */
+
+.btn {
+  font-family: var(--font-ui);
+  font-size: 0.92rem;
+  font-weight: 500;
+  padding: 0.7rem 1.5rem;
+  border-radius: 0.65rem;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: background-color 160ms ease, transform 160ms ease, border-color 160ms ease;
+}
+.btn:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+}
+.btn--primary {
+  background: var(--gold);
+  color: #26200c;
+  font-weight: 600;
+}
+.btn--primary:hover {
+  background: #ffd97a;
+  transform: translateY(-2px);
+}
+.btn--ghost {
+  background: transparent;
+  border-color: rgba(255, 255, 255, 0.18);
+  color: var(--text-dim);
+  padding: 0.45rem 0.95rem;
+  font-size: 0.82rem;
+}
+.btn--ghost:hover {
+  border-color: var(--danger-dim);
+  color: var(--danger);
+}
+
+/* -------------------------------------------------------------------- toast */
+
+.toast {
+  position: absolute;
+  left: 50%;
+  bottom: min(15rem, 38vh);
+  transform: translateX(-50%);
+  max-width: calc(100% - 2rem);
+  text-align: center;
+  padding: 0.65rem 1.1rem;
+  border-radius: 0.6rem;
+  font-size: 0.85rem;
+  z-index: 30;
+  animation: rise-in 200ms ease;
+}
+.toast--warn {
+  background: rgba(60, 22, 20, 0.95);
+  border: 1px solid var(--danger-dim);
+  color: #ffc9c5;
+}
+
+/* ------------------------------------------------------------- keyframes/etc */
+
+@keyframes rise-in {
+  from { opacity: 0; transform: translateY(0.8rem); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* ------------------------------------------------------------- responsive */
+
+/* Small laptops and tablets: the rail is gone, so the felt takes the width. */
+@media (max-width: 900px) {
+  .table-shell {
+    --card-w: 4.2rem;
+    --card-h: 5.9rem;
+    --table-w: min(94vw, 46rem);
+    --table-h: min(40vh, 24rem);
+  }
+  .topbar {
+    gap: 1.1rem;
+    padding: 0.7rem 1rem;
+  }
+  /*
+    One centred column. justify-items overrides the desktop dock's
+    justify-self and flex-start, which pushed the plate and actions
+    to opposite edges.
+  */
+  .dock {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    gap: 0.6rem;
+    padding: 0 1rem 1rem;
+  }
+  .dock__plate,
+  .dock__action {
+    justify-self: center;
+    justify-content: center;
+    display: flex;
+  }
+  .bidding {
+    align-items: center;
+  }
+  .bidding__rule {
+    text-align: center;
+  }
+  .plate__name {
+    max-width: 5rem;
+  }
+}
+
+/* ==========================================================================
+   Phones, portrait
+   --------------------------------------------------------------------------
+   Six plates have to fit around a table 390px wide. Plates show only the
+   name, contract and score, and the seat ring moves in (SEAT_RADIUS in
+   seats.js). The deck, the face-down stacks and the bidding note are hidden.
+   ========================================================================== */
+
+@media (max-width: 620px) {
+  .table-shell {
+    --card-w: 3.9rem;
+    --card-h: 5.5rem;
+    --table-w: min(100vw - 1rem, 26rem);
+    --table-h: min(38vh, 19rem);
+  }
+
+  .topbar {
+    gap: 0.7rem;
+    padding: 0.5rem 0.7rem;
+  }
+  .topbar__eyebrow {
+    font-size: 0.5rem;
+    letter-spacing: 0.12em;
+  }
+  .topbar__round-num,
+  .topbar__hand-num {
+    font-size: 1.15rem;
+  }
+  .topbar__round-of {
+    font-size: 0.7rem;
+  }
+  .sound-toggle,
+  .btn--ghost {
+    padding: 0.4rem 0.55rem;
+    font-size: 0.72rem;
+  }
+  /* "Leave table" becomes "Leave". */
+  .topbar__long {
+    display: none;
+  }
+
+  .stage {
+    gap: 0.2rem;
+    padding: 0 0.25rem 0.25rem;
+  }
+
+  .felt {
+    border-width: 0.6rem;
+  }
+  /* the stock is decorative, and it is the first thing that can go */
+  .deck {
+    display: none;
+  }
+
+  /* --- plates: name, contract, score, nothing else --------------------- */
+  .plate {
+    gap: 0.3rem;
+    padding: 0.22rem 0.45rem 0.22rem 0.22rem;
+  }
+  .plate__avatar {
+    width: 1.55rem;
+    height: 1.55rem;
+    border-width: 1.5px;
+  }
+  .plate__name {
+    font-size: 0.66rem;
+    max-width: 3.6rem;
+  }
+  .plate__tag,
+  .plate__last-warning {
+    display: none;
+  }
+  .plate__contract {
+    height: auto;
+    gap: 0.3rem;
+  }
+  .plate__bid {
+    font-size: 0.58rem;
+  }
+  .plate__bid strong {
+    font-size: 0.7rem;
+  }
+  .plate__waiting {
+    font-size: 0.56rem;
+  }
+  .plate__score {
+    font-size: 0.7rem;
+  }
+  .plate__first-bidder {
+    font-size: 0.42rem;
+    padding: 0.05rem 0.18rem;
+  }
+  .pip {
+    width: 0.3rem;
+    height: 0.3rem;
+    border-width: 1.2px;
+  }
+
+  /*
+    Hide opponents' face-down stacks; the plate shows the count. Blind
+    rounds keep them, since those cards are face up.
+  */
+  .seat__hand {
+    display: none;
+  }
+  .seat__hand--visible {
+    display: flex;
+    height: auto;
+  }
+  /* Blind-round cards are small so they stay clear of the name below. */
+  .seat__hand--visible .card {
+    --card-w: 1.9rem;
+    --card-h: 2.7rem;
+  }
+
+  /*
+    A tighter ring and smaller cards on the table, so the trump and plates
+    stay visible. Your own hand keeps its full size.
+  */
+  .trick {
+    --orbit-x: 5rem;
+    --orbit-y: 4rem;
+  }
+  .trick__slot .card {
+    --card-w: 3.4rem;
+    --card-h: 4.8rem;
+  }
+  .trick__winning {
+    font-size: 0.45rem;
+    letter-spacing: 0.06em;
+  }
+  .trump-centre__label {
+    font-size: 0.48rem;
+  }
+
+  .turn {
+    margin-top: 0.15rem;
+    min-height: 1.2rem;
+  }
+  .turn__who {
+    font-size: 0.95rem;
+  }
+  .turn__verb {
+    font-size: 0.72rem;
+  }
+
+  /* --- your corner ----------------------------------------------------- */
+  .dock {
+    width: 100%;
+    gap: 0.35rem;
+    padding: 0 0.5rem;
+  }
+  .dock__plate,
+  .dock__action {
+    width: 100%;
+    padding-bottom: 0;
+  }
+  .dock__hand {
+    width: 100%;
+    /*
+       The fan pivots below itself, so the outer cards dip past the baseline.
+       The padding keeps them off the line underneath.
+    */
+    min-height: calc(var(--card-h) + 1.4rem);
+    padding-bottom: 0.5rem;
+  }
+  .fan {
+    padding-top: 0.9rem;
+  }
+  /*
+    Eight cards across 390px, about 2.4rem showing on each. With
+    tap-to-select, that's enough for a thumb.
+  */
+  .fan__slot {
+    margin-left: -1.5rem;
+  }
+
+  /* --- bidding keypad ---------------------------------------------------- */
+  .bidding {
+    width: 100%;
+    padding: 0.6rem 0.55rem;
+    gap: 0.4rem;
+  }
+  .bidding__label {
+    font-size: 0.72rem;
+  }
+  .bidding__row {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 0.35rem;
+    width: 100%;
+  }
+  .bid-chip {
+    width: 100%;
+    height: 2.6rem;
+    font-size: 1.05rem;
+  }
+  .bidding__rule {
+    display: none; /* the struck-through chip already says it */
+  }
+  .waiting {
+    font-size: 0.75rem;
+    padding-bottom: 0.2rem;
+    text-align: center;
+  }
+
+  .banner__round {
+    font-size: 1.7rem;
+  }
+  .banner__cards {
+    font-size: 0.72rem;
+  }
+
+  .curtain__panel {
+    padding: 1.2rem 1rem;
+  }
+  .curtain__title {
+    font-size: 1.4rem;
+  }
+  .curtain__body {
+    font-size: 0.85rem;
+  }
+  .score-table {
+    font-size: 0.8rem;
+    margin: 0.8rem 0 1.1rem;
+  }
+  .score-table th {
+    font-size: 0.55rem;
+    letter-spacing: 0.08em;
+  }
+  .score-table td {
+    padding: 0.4rem 0.15rem;
+  }
+  .standings__name {
+    font-size: 0.85rem;
+  }
+}
+
+/* The narrow end of the range: iPhone SE, iPhone 13 mini. */
+@media (max-width: 380px) {
+  .table-shell {
+    --card-w: 3.5rem;
+    --card-h: 4.95rem;
+  }
+  .fan__slot {
+    margin-left: -1.45rem;
+  }
+  .plate__name {
+    max-width: 3rem;
+  }
+  .bid-chip {
+    height: 2.4rem;
+  }
+}
+
+/* ==========================================================================
+   Trump, at the centre of the felt. Played cards are placed around it.
+   ========================================================================== */
+
+.trump-centre {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.trump-centre__label {
+  font-size: 0.55rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(240, 200, 97, 0.75);
+}
+
+.trump-centre__card {
+  filter: drop-shadow(0 0.4rem 1rem rgba(0, 0, 0, 0.55));
+}
+.trump-centre__card .card {
+  border: 2px solid rgba(240, 200, 97, 0.6);
+}
+
+.trump-centre__suit {
+  font-size: 1.5rem;
+  line-height: 1;
+}
+.trump-centre__suit--heart,
+.trump-centre__suit--diamond {
+  color: var(--ink-red);
+}
+.trump-centre__suit--spade,
+.trump-centre__suit--club {
+  color: #e8ebe9;
+}
+
+.trump-centre--none .trump-centre__none {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--gold);
+  opacity: 0.9;
+}
+
+/* ==========================================================================
+   Whose turn it is, in words
+   ========================================================================== */
+
+.turn {
+  display: flex;
+  align-items: baseline;
+  gap: 0.45rem;
+  margin: 0.5rem 0 0;
+  min-height: 1.6rem;
+  color: var(--text-dim);
+}
+
+.turn__who {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--text);
+}
+.turn.is-you .turn__who {
+  color: var(--gold);
+}
+
+.turn__verb {
+  font-size: 0.85rem;
+  letter-spacing: 0.06em;
+}
+
+.turn--quiet {
+  font-style: italic;
+  color: var(--text-faint);
+}
+
+/* ==========================================================================
+   Plate: the bid, said plainly
+   ========================================================================== */
+
+.plate__bid {
+  font-size: 0.72rem;
+  color: var(--text-dim);
+  letter-spacing: 0.02em;
+}
+.plate__bid strong {
+  font-size: 0.88rem;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+.plate.is-on-contract .plate__bid strong {
+  color: var(--gold);
+}
+.plate.is-overshot .plate__bid strong {
+  color: var(--danger);
+}
+
+/* You bid last, so "nu se poate" may force your hand. Say so before it does. */
+.plate.is-last-bidder {
+  border-color: var(--danger);
+  box-shadow:
+    0 0 0 1px var(--danger),
+    0 0.5rem 1.4rem rgba(0, 0, 0, 0.5);
+}
+
+.plate__last-warning {
+  display: block;
+  margin-top: 0.15rem;
+  max-width: 13rem;
+  font-size: 0.6rem;
+  line-height: 1.25;
+  color: #f0a49e;
+  white-space: normal;
+}
+
+/* The lobby has no side rail, so its shell is a single column. */
+.lobby-shell {
+  grid-template-columns: 1fr;
+}
+
+/* the rail collapses before the felt does */
+@media (max-width: 1100px) {
+  .table-shell {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ==========================================================================
+   Short viewports: phones in landscape
+   --------------------------------------------------------------------------
+   Height is the constraint here (about 850x390). Chrome goes first, then
+   felt size, then card size. Your own hand stays readable.
+   ========================================================================== */
+
+@media (max-height: 560px) {
+  .table-shell {
+    --card-w: 3.3rem;
+    --card-h: 4.6rem;
+    --table-w: min(72vw, 44rem);
+    --table-h: min(46vh, 12rem);
+  }
+
+  /*
+    A wide, shallow felt. Six seats stack two-deep on each side, so the
+    plates carry nothing else.
+
+    The min-height stops the felt shrinking until the side plates overlap.
+  */
+  .felt {
+    border-width: 0.5rem;
+    min-height: 8.5rem;
+  }
+
+  .topbar {
+    padding: 0.35rem 0.8rem;
+    gap: 0.9rem;
+  }
+  .topbar__round-num,
+  .topbar__hand-num {
+    font-size: 1.05rem;
+  }
+  .topbar__eyebrow {
+    font-size: 0.52rem;
+    margin-bottom: 0;
+  }
+  .btn--ghost,
+  .sound-toggle {
+    padding: 0.3rem 0.6rem;
+    font-size: 0.7rem;
+  }
+
+  .stage {
+    gap: 0.15rem;
+    padding: 0 0.5rem 0.25rem;
+  }
+
+  /* the stock is decorative; it is the first thing to go */
+  .deck {
+    display: none;
+  }
+
+  .plate {
+    padding: 0.15rem 0.42rem 0.15rem 0.15rem;
+    gap: 0.3rem;
+  }
+  .plate__avatar {
+    width: 1.4rem;
+    height: 1.4rem;
+    border-width: 1.5px;
+  }
+  .plate__name {
+    font-size: 0.64rem;
+    max-width: 4rem;
+  }
+  .plate__contract {
+    height: auto;
+    gap: 0.3rem;
+  }
+  .plate__bid {
+    font-size: 0.58rem;
+  }
+  .plate__bid strong {
+    font-size: 0.7rem;
+  }
+  .plate__waiting {
+    font-size: 0.52rem;
+  }
+  .plate__score {
+    font-size: 0.68rem;
+  }
+  .plate__first-bidder {
+    font-size: 0.42rem;
+    padding: 0.05rem 0.18rem;
+  }
+  .pip {
+    width: 0.3rem;
+    height: 0.3rem;
+    border-width: 1.2px;
+  }
+  .plate__tag,
+  .plate__last-warning {
+    display: none;
+  }
+
+  /* as in portrait: the stacks are decoration, and here they are what pushes
+     the plate on the seat above into the plate on the seat below */
+  .seat__hand {
+    display: none;
+  }
+  .seat__hand--visible {
+    display: flex;
+    height: auto;
+  }
+  .seat__hand--visible .card {
+    --card-w: 1.6rem;
+    --card-h: 2.25rem;
+  }
+  .card--small {
+    --card-w: 1.5rem;
+    --card-h: 2.1rem;
+  }
+
+  .trick {
+    --orbit-x: 6rem;
+    --orbit-y: 3rem;
+  }
+  /* the played ring has to stay inside a felt only 12rem tall */
+  .trick__slot .card {
+    --card-w: 2.9rem;
+    --card-h: 4.1rem;
+  }
+  .trick__winning {
+    font-size: 0.45rem;
+    letter-spacing: 0.06em;
+    top: calc(100% + 0.15rem);
+  }
+  .trump-centre__label {
+    font-size: 0.45rem;
+  }
+
+  .turn {
+    margin-top: 0.1rem;
+    min-height: 1rem;
+  }
+  .turn__who {
+    font-size: 0.85rem;
+  }
+  .turn__verb {
+    font-size: 0.7rem;
+  }
+
+  .dock {
+    gap: 0.35rem;
+  }
+  .dock__hand {
+    min-height: calc(var(--card-h) + 0.6rem);
+    padding-bottom: 0.3rem;
+  }
+  .fan {
+    padding-top: 0.4rem;
+  }
+  .fan__slot {
+    margin-left: -1.3rem;
+  }
+  .dock__plate {
+    padding-bottom: 0.2rem;
+  }
+
+  .bidding {
+    padding: 0.45rem 0.6rem;
+    gap: 0.3rem;
+  }
+  .bidding__label {
+    font-size: 0.66rem;
+  }
+  .bidding__rule {
+    display: none; /* the struck-through chip already says it */
+  }
+  .bid-chip {
+    width: 1.8rem;
+    height: 1.8rem;
+    font-size: 0.82rem;
+  }
+
+  .banner__round {
+    font-size: 1.5rem;
+  }
+  .curtain__panel {
+    padding: 1rem 1.2rem;
+    min-width: 0;
+    max-height: 92vh;
+    overflow-y: auto;
+  }
+  .curtain__title {
+    font-size: 1.25rem;
+  }
+  .score-table {
+    font-size: 0.78rem;
+    margin: 0.6rem 0 0.9rem;
+  }
+}
+
+/* Very short screens: small phones in landscape. */
+@media (max-height: 420px) {
+  .table-shell {
+    --card-w: 3rem;
+    --card-h: 4.2rem;
+    --table-h: min(44vh, 11.5rem);
+  }
+  .topbar {
+    padding: 0.2rem 0.6rem;
+  }
+  .felt__ring {
+    display: none;
+  }
+  .trick {
+    --orbit-x: 4.6rem;
+    --orbit-y: 2.8rem;
+  }
+}
+
+/*
+  Portrait phones: the felt becomes a band across the middle, leaving
+  room for the hand below.
+*/
+@media (max-width: 560px) and (orientation: portrait) {
+  .table-shell {
+    --card-w: 3.5rem;
+    --card-h: 4.9rem;
+    --table-w: 96vw;
+    --table-h: min(38vh, 20rem);
+  }
+  .fan__slot {
+    margin-left: -1.9rem;
+  }
+  .topbar {
+    gap: 0.8rem;
+    padding: 0.5rem 0.7rem;
+  }
+  .sound-toggle__label {
+    display: none;
+  }
+  .sound-toggle::after {
+    content: 'Sound';
+    font-size: 0.7rem;
+  }
+  .plate__last-warning {
+    display: none;
+  }
+}
+
+/* Motion is decoration here, never information: every state is also readable
+   from colour, position and text. So it can all go. */
+@media (prefers-reduced-motion: reduce) {
+  .table-shell *,
+  .table-shell *::before,
+  .table-shell *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .trick__slot.is-sweeping {
+    opacity: 0;
+  }
+}
+
